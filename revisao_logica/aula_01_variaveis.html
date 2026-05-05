@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 01: Variáveis em JavaScript</title>
+    
+    <!-- Google Fonts: Inter para texto e Fira Code para códigos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Paleta de Cores Premium (Dark Theme) */
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            
+            /* Destaques e Syntax Highlighting */
+            --accent: #38bdf8;
+            --bg-code: #0b1120;
+            --code-keyword: #c678dd; /* Roxo */
+            --code-string: #98c379;  /* Verde */
+            --code-comment: #5c6370; /* Cinza */
+            --code-function: #61afef;/* Azul claro */
+            --code-variable: #e06c75;/* Vermelho claro */
+            --code-number: #d19a66;  /* Laranja */
+            --code-boolean: #d19a66;
+            
+            /* Tags */
+            --tag-let-bg: rgba(56, 189, 248, 0.15);
+            --tag-let-color: #38bdf8;
+            --tag-const-bg: rgba(52, 211, 153, 0.15);
+            --tag-const-color: #34d399;
+            --tag-var-bg: rgba(248, 113, 113, 0.15);
+            --tag-var-color: #f87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeInDown 0.8s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-main);
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Cartões de Conteúdo */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Animação em cascata para os cards */
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card:nth-child(6) { animation-delay: 0.6s; }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        /* Tags de declaração (let, const, var) */
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tag.let { background-color: var(--tag-let-bg); color: var(--tag-let-color); }
+        .tag.const { background-color: var(--tag-const-bg); color: var(--tag-const-color); }
+        .tag.var { background-color: var(--tag-var-bg); color: var(--tag-var-color); }
+
+        /* Blocos de Código */
+        .code-block {
+            background-color: var(--bg-code);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        pre {
+            margin: 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        /* Syntax Highlighting */
+        .token.keyword { color: var(--code-keyword); }
+        .token.string { color: var(--code-string); }
+        .token.comment { color: var(--code-comment); font-style: italic; }
+        .token.function { color: var(--code-function); }
+        .token.variable { color: var(--code-variable); }
+        .token.number { color: var(--code-number); }
+        .token.boolean { color: var(--code-boolean); }
+        .token.operator { color: var(--accent); }
+
+        /* Animações */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .card { padding: 1.25rem; }
+            code { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Aula 01: Variáveis</h1>
+            <p>O que são, como declarar e as boas práticas no JavaScript.</p>
+        </header>
+
+        <section class="card">
+            <h2 style="margin-top: 0;">O que são?</h2>
+            <p>Variáveis são <strong>espaços na memória</strong> que guardam informações. Elas permitem que você armazene dados para serem usados, modificados e manipulados posteriormente pelo seu código.</p>
+        </section>
+
+        <h2>Como declarar?</h2>
+
+        <section class="card">
+            <span class="tag let">let</span>
+            <p>Cria uma variável de escopo local (bloco). Seu valor <strong>pode ser alterado</strong> (reatribuído) posteriormente.</p>
+            <div class="code-block">
+<pre><code><span class="token keyword">let</span> <span class="token variable">nomeDaVariavel</span> <span class="token operator">=</span> <span class="token string">"valor"</span>;</code></pre>
+            </div>
+        </section>
+
+        <section class="card">
+            <span class="tag const">const</span>
+            <p>Cria uma variável constante de escopo local (bloco). Seu valor inicial <strong>não pode ser alterado</strong>.</p>
+            <div class="code-block">
+<pre><code><span class="token keyword">const</span> <span class="token variable">nomeDaVariavel</span> <span class="token operator">=</span> <span class="token string">"valor"</span>;</code></pre>
+            </div>
+        </section>
+
+        <section class="card">
+            <span class="tag var">var</span>
+            <p>Cria uma variável de escopo global ou de função. Seu valor pode ser alterado. <em>(Uso desencorajado no JavaScript moderno)</em>.</p>
+            <div class="code-block">
+<pre><code><span class="token keyword">var</span> <span class="token variable">nomeDaVariavel</span> <span class="token operator">=</span> <span class="token string">"valor"</span>;</code></pre>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Diferenças e Recomendações</h2>
+            <ul>
+                <li>Use <strong><code>let</code></strong> para variáveis que você sabe que <strong>vão mudar</strong> de valor (ex: contadores em loops).</li>
+                <li>Use <strong><code>const</code></strong> por padrão para tudo. Se a variável não vai mudar de valor, ela deve ser uma constante.</li>
+            </ul>
+            <p style="margin-top: 1rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; border-radius: 4px;">
+                <strong>Atenção:</strong> Evite utilizar <code>var</code>. O escopo global e o comportamento de "hoisting" do <code>var</code> podem causar bugs difíceis de rastrear.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>Exemplos de Código</h2>
+            <p>Declarando variáveis com diferentes tipos de dados primitivos e objetos:</p>
+            <div class="code-block">
+<pre><code><span class="token comment">// Declarações</span>
+<span class="token keyword">let</span> <span class="token variable">nomeCompleto</span> <span class="token operator">=</span> <span class="token string">"Eric Gregorio"</span>; <span class="token comment">// String</span>
+<span class="token keyword">const</span> <span class="token variable">idade</span> <span class="token operator">=</span> <span class="token number">20</span>; <span class="token comment">// Number Inteiro</span>
+<span class="token keyword">var</span> <span class="token variable">altura</span> <span class="token operator">=</span> <span class="token number">1.75</span>; <span class="token comment">// Number Float</span>
+<span class="token keyword">const</span> <span class="token variable">estaAprovado</span> <span class="token operator">=</span> <span class="token boolean">true</span>; <span class="token comment">// Boolean</span>
+<span class="token keyword">const</span> <span class="token variable">dataDeNascimento</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">Date</span>(); <span class="token comment">// Object (Date)</span>
+
+<span class="token comment">// Exibindo os valores no console do navegador</span>
+<span class="token function">console</span>.<span class="token function">log</span>(nomeCompleto);
+<span class="token function">console</span>.<span class="token function">log</span>(idade);
+<span class="token function">console</span>.<span class="token function">log</span>(altura);
+<span class="token function">console</span>.<span class="token function">log</span>(estaAprovado);
+<span class="token function">console</span>.<span class="token function">log</span>(dataDeNascimento);</code></pre>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>
