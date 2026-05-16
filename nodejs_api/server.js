@@ -38,7 +38,6 @@ app.use(cors());
  */
 app.get("/clientes", async (req, res) => {
   const [rows] = await pool.execute("SELECT * FROM clientes;");
-  console.log(rows);
 
   if (rows.length === 0) {
     return res.json({
@@ -50,10 +49,18 @@ app.get("/clientes", async (req, res) => {
 
 app.get("/:id", (req, res) => {
   const id = parseInt(req.params.id);
-  console.log(req);
 
   const getUserById = users.find((user) => user.id === id);
   return console.log(getUserById);
+});
+
+app.post("/clientes", async (req, res) => {
+  const data = req.body;
+
+  const [row] = await pool.execute(
+    "INSERT INTO clientes (nome, email, telefone, cidade, estado) VALUES (?, ?, ?, ?, ?);",
+    [data.nome, data.email, data.telefone, data.cidade, data.estado],
+  );
 });
 
 /**
