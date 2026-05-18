@@ -21,12 +21,12 @@ app.use(cors());
 // const users = [
 //   {
 //     id: 1,
-//     name: "Eric Gregorio",
-//     email: "eric@eric.com",
+//     user_name: "Eric Gregorio",
+//     email: "gregorio@gregorio.com",
 //   },
 //   {
 //     id: 2,
-//     name: "Gregorio Aquino",
+//     user_name: "Gregorio Aquino",
 //     email: "gregorio@gregorio.com",
 //   },
 // ];
@@ -55,12 +55,26 @@ app.get("/:id", (req, res) => {
 });
 
 app.post("/clientes", async (req, res) => {
-  const data = req.body;
+  const { nome, email, telefone, cidade, estado } = req.body;
+  // const data = req.body;
+  // || => or - ou
+  if (nome === "" || !email || !telefone || !cidade || !estado) {
+    return res.json({ message: "Todos os campos são Obrigatórios" });
+  }
 
-  const [row] = await pool.execute(
-    "INSERT INTO clientes (nome, email, telefone, cidade, estado) VALUES (?, ?, ?, ?, ?);",
-    [data.nome, data.email, data.telefone, data.cidade, data.estado],
-  );
+  // const [row] = await pool.execute(
+  //   "INSERT INTO clientes (nome, email, telefone, cidade, estado) VALUES (?, ?, ?, ?, ?);",
+  //   [nome, email, telefone, cidade, estado],
+  // );
+
+  // const [row] = await pool.execute(
+  //   "INSERT INTO clientes (nome, email, telefone, cidade, estado) VALUES (?, ?, ?, ?, ?);",
+  //   [data.nome, data.email, data.telefone, data.cidade, data.estado],
+  // );
+
+  return res.json({
+    message: "Cadastro realizado com Sucesso!",
+  });
 });
 
 /**
