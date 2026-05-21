@@ -62,10 +62,27 @@ app.post("/clientes", async (req, res) => {
     return res.json({ message: "Todos os campos são Obrigatórios" });
   }
 
-  // const [row] = await pool.execute(
-  //   "INSERT INTO clientes (nome, email, telefone, cidade, estado) VALUES (?, ?, ?, ?, ?);",
-  //   [nome, email, telefone, cidade, estado],
-  // );
+  const [[verifyEmail]] = await pool.execute(
+    "SELECT email FROM clientes WHERE email = ?",
+    [email],
+  );
+
+  if (verifyEmail?.email === email) {
+    return res.json({
+      message: "Email já cadastrado!",
+    });
+  }
+
+  const [row] = await pool.execute(
+    "INSERT INTO clientes (nome, email, telefone, cidade, estado) VALUES (?, ?, ?, ?, ?);",
+    [nome, email, telefone, cidade, estado],
+  );
+
+  if (row.affectedRows === 0) {
+    return res.json({
+      message: "Não foi possível realizar o cadastro!",
+    });
+  }
 
   // const [row] = await pool.execute(
   //   "INSERT INTO clientes (nome, email, telefone, cidade, estado) VALUES (?, ?, ?, ?, ?);",
@@ -74,6 +91,72 @@ app.post("/clientes", async (req, res) => {
 
   return res.json({
     message: "Cadastro realizado com Sucesso!",
+  });
+});
+
+// Metodo PUT atualiza dados na rota
+app.put("/clientes/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const { nome, email, telefone, cidade, estado } = req.body;
+
+  if (nome === "" || !email || !telefone || !cidade || !estado) {
+    return res.json({ message: "Todos os campos são Obrigatórios" });
+  }
+
+  const [[verifyEmail]] = await pool.execute(
+    "SELECT email FROM clientes WHERE email = ?",
+    [email],
+  );
+
+  if (verifyEmail?.email === email) {
+    return res.json({
+      message: "Email já cadastrado com outro cliente!",
+    });
+  }
+
+  const [getCliente] = await pool.execute(
+    "SELECT * FROM clientes WHERE id_cliente = ?;",
+    [id],
+  );
+
+  if (getCliente.length === 0) {
+    return res.json({
+      message: "Cliente não encontrado!",
+    });
+  }
+
+  const [row] = await pool.execute(
+    `
+      UPDATE clientes SET 
+      nome = ?,
+      email = ?,
+      telefone = ?,
+      cidade = ?,
+      estado = ?
+     WHERE id_cliente = ?;
+    `,
+    [nome, email, telefone, cidade, estado, id],
+  );
+
+  console.log(row);
+
+  return res.json({
+    message: "Cliente atulizado com sucesso!",
+  });
+});
+
+app.delete("/clientes/:id", async (req, res) => {
+  const id = Number(req.params.id);
+
+  const [row] = await pool.execute(
+    "DELETE FROM clientes WHERE id_cliente = ?",
+    [id],
+  );
+
+  console.log(row);
+
+  return res.json({
+    message: "Cliente deletado com sucesso!",
   });
 });
 
